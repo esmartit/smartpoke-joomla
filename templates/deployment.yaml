@@ -36,6 +36,15 @@ spec:
         hostnames:
         - "status.localhost"
       containers:
+      - name: cms-proxyapi
+        image: chalonazo/cms-proxyapi
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+      - name: cms-restapi
+        image: chalonazo/cms-restapi
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+      - name: cms-webui
+        image: chalonazo/cms-webui
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
       - name: joomla
         image: {{ template "joomla.image" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
