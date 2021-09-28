@@ -37,14 +37,23 @@ spec:
         - "status.localhost"
       containers:
       - name: cms-proxyapi
-        image: chalonazo/cms-proxyapi
+        image: chalonazo/cms-proxyapi:1.0
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        ports:
+        - name: http
+          containerPort: 4000
       - name: cms-restapi
-        image: chalonazo/cms-restapi
+        image: chalonazo/cms-restapi:1.0
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        ports:
+        - name: http
+          containerPort: 5000
       - name: cms-webui
-        image: chalonazo/cms-webui
+        image: chalonazo/cms-webui:1.0
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        ports:
+        - name: http
+          containerPort: 3000
       - name: joomla
         image: {{ template "joomla.image" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
@@ -148,7 +157,7 @@ spec:
       - name: metrics
         image: {{ template "joomla.metrics.image" . }}
         imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
-        command: [ '/bin/apache_exporter', '--scrape_uri', 'http://status.localhost:80/server-status/?auto']
+        command: [ '/bin/apache_exporter', '-scrape_uri', 'http://status.localhost:80/server-status/?auto']
         ports:
         - name: metrics
           containerPort: 9117

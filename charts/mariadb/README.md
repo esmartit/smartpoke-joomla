@@ -7,8 +7,7 @@ MariaDB is developed as open source software and as a relational database it pro
 ## TL;DR;
 
 ```bash
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-$ helm install my-release bitnami/mariadb
+$ helm install stable/mariadb
 ```
 
 ## Introduction
@@ -28,7 +27,7 @@ Bitnami charts can be used with [Kubeapps](https://kubeapps.com/) for deployment
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install my-release bitnami/mariadb
+$ helm install --name my-release stable/mariadb
 ```
 
 The command deploys MariaDB on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
@@ -65,7 +64,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `volumePermissions.enabled`                 | Enable init container that changes volume permissions in the data directory (for cases where the default k8s `runAsUser` and `fsUser` values do not work) | `false`             |
 | `volumePermissions.image.registry`          | Init container volume-permissions image registry    | `docker.io`                                                       |
 | `volumePermissions.image.repository`        | Init container volume-permissions image name        | `bitnami/minideb`                                                 |
-| `volumePermissions.image.tag`               | Init container volume-permissions image tag         | `buster`                                                          |
+| `volumePermissions.image.tag`               | Init container volume-permissions image tag         | `stretch`                                                         |
 | `volumePermissions.image.pullPolicy`        | Init container volume-permissions image pull policy | `Always`                                                          |
 | `volumePermissions.resources`               | Init container resource requests/limit              | `nil`                                                             |
 | `service.type`                              | Kubernetes service type                             | `ClusterIP`                                                       |
@@ -201,9 +200,9 @@ The above parameters map to the env variables defined in [bitnami/mariadb](http:
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-$ helm install my-release \
+$ helm install --name my-release \
   --set rootUser.password=secretpassword,db.user=app_database \
-    bitnami/mariadb
+    stable/mariadb
 ```
 
 The above command sets the MariaDB `root` account password to `secretpassword`. Additionally it creates a database named `my_database`.
@@ -211,7 +210,7 @@ The above command sets the MariaDB `root` account password to `secretpassword`. 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install my-release -f values.yaml bitnami/mariadb
+$ helm install --name my-release -f values.yaml stable/mariadb
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
@@ -277,7 +276,7 @@ The feature allows for specifying a template string for a initContainer in the m
 master:
   extraInitContainers: |
     - name: initcontainer
-      image: bitnami/minideb:buster
+      image: bitnami/minideb:stretch
       command: ["/bin/sh", "-c"]
       args:
         - install_packages curl && curl http://api-service.local/db/starting;
@@ -303,7 +302,7 @@ You can enable this initContainer by setting `volumePermissions.enabled` to `tru
 It's necessary to set the `rootUser.password` parameter when upgrading for readiness/liveness probes to work properly. When you install this chart for the first time, some notes will be displayed providing the credentials you must use under the 'Administrator credentials' section. Please note down the password and run the command below to upgrade your chart:
 
 ```bash
-$ helm upgrade my-release bitnami/mariadb --set rootUser.password=[ROOT_PASSWORD]
+$ helm upgrade my-release stable/mariadb --set rootUser.password=[ROOT_PASSWORD]
 ```
 
 | Note: you need to substitute the placeholder _[ROOT_PASSWORD]_ with the value obtained in the installation notes.

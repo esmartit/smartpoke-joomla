@@ -131,17 +131,15 @@ mariadb:
       ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
       ##   GKE, AWS & OpenStack)
       ##
-#      storageClass: "rook-ceph-block"
+      # storageClass: "-"
       accessMode: ReadWriteOnce
       size: 8Gi
-#  slave:
-#    persistence:
-#      storageClass: "rook-ceph-block"
+
 ## Configure extra options for liveness and readiness probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 600
+  initialDelaySeconds: 120
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 6
@@ -220,7 +218,7 @@ persistence:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-#    storageClass: "rook-ceph-block"
+    # storageClass: "-"
     accessMode: ReadWriteOnce
     size: 8Gi
 
@@ -276,4 +274,3 @@ metrics:
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
   # resources: {}
-
