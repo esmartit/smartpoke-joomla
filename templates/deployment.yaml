@@ -39,17 +39,26 @@ spec:
       - name: cms-proxyapi
         image: chalonazo/cms-proxyapi:1.0
         ports:
-          - containerPort: 4000
+          - name: http
+            containerPort: 4000
+          - name: https
+            containerPort: 4000
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
       - name: cms-restapi
         image: chalonazo/cms-restapi:1.0
         ports:
-          - containerPort: 5000
+          - name: http
+            containerPort: 5000
+          - name: https
+            containerPort: 5000
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
       - name: cms-webui
         image: chalonazo/cms-webui:1.0
         ports:
-          - containerPort: 3000
+          - name: http
+            containerPort: 3000
+          - name: https
+            containerPort: 3000
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
       - name: joomla
         image: {{ template "joomla.image" . }}
