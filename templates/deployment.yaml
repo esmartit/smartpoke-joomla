@@ -39,21 +39,90 @@ spec:
       - name: cms-proxyapi
         image: chalonazo/cms-proxyapi:1.0
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: PORT
+          value: "4000"
+        - name: REACT_APP_TWITTER_CONSUMER_KEY
+          value: sAujrbXPzbJgarCvZGxevuvDd
+        - name: REACT_APP_TWITTER_CONSUMER_SECRET
+          value: EVjZJpm8tzz1439PsjvE2NrPV7gUbpuz6qT6p7ADSASWbXukkC
+        - name: REACT_APP_TWITTER_CALLBACK_URL
+          value: http://localhost:4000/auth/twitter/redirect
+        - name: REACT_APP_FACEBOOK_CLIENT_ID
+          value: "4061681973945682"
+        - name: REACT_APP_FACEBOOK_CLIENT_SECRET
+          value: d315da7da726d5a1c8ecfd48b1a633f1
+        - name: REACT_APP_FACEBOOK_CALLBACK_URL
+          value: http://localhost:4000/auth/facebook/redirect
+        - name: REACT_APP_MONGODB_URI
+          value: mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.dev-env.svc.cluster.local/smartpoke
+        - name: REACT_APP_CLIENT_HOME_PAGE_URL
+          value: http://localhost:3000
         ports:
-        - name: http
-          containerPort: 4000
+        - containerPort: 4000
       - name: cms-restapi
         image: chalonazo/cms-restapi:1.0
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: API_VERSION
+          value: v1
+        - name: SERVER
+          value: localhost
+        - name: PORT
+          value: "5000"
+        - name: PUBLISH_API
+          value: https://devenv.cluster.smartpoke.es/directory.php
+        - name: MONGODB_URI
+          value: mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.dev-env.svc.cluster.local/smartpoke
+        {{- if .Values.mariadb.enabled }}
+        - name: MARIADB_HOST
+          value: {{ template "joomla.mariadb.fullname" . }}
+        - name: MARIADB_PORT
+          value: "3306"
+        - name: MARIADB_DB
+          value: {{ .Values.mariadb.db.name | quote }}
+        - name: MARIADB_USER
+          value: {{ .Values.mariadb.db.user | quote }}
+        - name: MARIADB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "joomla.mariadb.fullname" . }}
+              key: mariadb-password
+        {{- else }}
+        - name: MARIADB_HOST
+          value: {{ .Values.externalDatabase.host | quote }}
+        - name: MARIADB_PORT
+          value: {{ .Values.externalDatabase.port | quote }}
+        - name: MARIADB_DB
+          value: {{ .Values.externalDatabase.database | quote }}
+        - name: MARIADB_USER
+          value: {{ .Values.externalDatabase.user | quote }}
+        - name: MARIADB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ printf "%s-%s" .Release.Name "externaldb" }}
+              key: db-password
+        {{- end }}
         ports:
-        - name: http
-          containerPort: 5000
+        - containerPort: 5000
       - name: cms-webui
         image: chalonazo/cms-webui:1.0
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: REACT_APP_API_URL
+          value: http://localhost:5000/api
+        - name: REACT_APP_PROXY_URL
+          value: http://localhost:4000
+        - name: REACT_APP_API_ID_FB
+          value: "4061681973945682"
+        - name: REACT_APP_VERSION_FB
+          value: v11.0
+        - name: REACT_APP_CLIENT
+          value: "99999"
+        - name: REACT_APP_API_JOOMLA
+          value: https://devenv.cluster.smartpoke.es
         ports:
-        - name: http
-          containerPort: 3000
+        - containerPort: 3000
       - name: joomla
         image: {{ template "joomla.image" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
