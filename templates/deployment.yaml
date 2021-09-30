@@ -71,7 +71,7 @@ spec:
         - name: PORT
           value: "5000"
         - name: PUBLISH_API
-          value: https://devenv.cluster.smartpoke.es/directory.php
+          value: "https://platform-{{ .Release.Namespace }}.cluster.smartpoke.es/directory.php"
         - name: MONGODB_URI
           value: mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.dev-env.svc.cluster.local/smartpoke
         {{- if .Values.mariadb.enabled }}
@@ -120,7 +120,7 @@ spec:
         - name: REACT_APP_CLIENT
           value: "99999"
         - name: REACT_APP_API_JOOMLA
-          value: https://devenv.cluster.smartpoke.es
+          value: "https://platform-{{ .Release.Namespace }}.cluster.smartpoke.es"
         ports:
         - containerPort: 3000
       - name: joomla
