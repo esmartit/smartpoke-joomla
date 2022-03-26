@@ -69,7 +69,7 @@ externalDatabase:
   user: bn_joomla
 
   ## Database password
-  password: ""
+  password: "Asdfg12345"
 
   ## Database name
   database: bitnami_joomla
@@ -110,7 +110,7 @@ mariadb:
     user: bn_joomla
     ## If the password is not specified, mariadb will generates a random password
     ##
-    # password:
+    password: "Asdfg12345"
 
   ## MariaDB admin password
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
@@ -186,7 +186,6 @@ service:
 ##
 ingress:
   enabled: true
-  hostname: devenv.cluster.smartpoke.es
   annotations:
     kubernetes.io/ingress.class: nginx
     ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -196,14 +195,6 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     kubernetes.io/tls-acme: "true"
     ingress.kubernetes.io/affinity: cookie
-  hosts:
-    - host: devenv.cluster.smartpoke.es
-      paths:
-        - /
-  tls:
-    - hosts:
-        - devenv.cluster.smartpoke.es
-      secretName: devenv-cluster-smartpoke-tls
 
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
