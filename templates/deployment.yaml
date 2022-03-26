@@ -37,7 +37,7 @@ spec:
         - "status.localhost"
       containers:
       - name: cms-proxyapi
-        image: chalonazo/cms-proxyapi:1.0
+        image: chalonazo/cms-proxyapi:1.2
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         env:
         - name: PORT
@@ -47,21 +47,21 @@ spec:
         - name: REACT_APP_TWITTER_CONSUMER_SECRET
           value: EVjZJpm8tzz1439PsjvE2NrPV7gUbpuz6qT6p7ADSASWbXukkC
         - name: REACT_APP_TWITTER_CALLBACK_URL
-          value: http://localhost:4000/auth/twitter/redirect
+          value: "https://cms-proxyapi-{{ .Release.Namespace }}.cluster.smartpoke.es/auth/twitter/redirect"
         - name: REACT_APP_FACEBOOK_CLIENT_ID
           value: "4061681973945682"
         - name: REACT_APP_FACEBOOK_CLIENT_SECRET
           value: d315da7da726d5a1c8ecfd48b1a633f1
         - name: REACT_APP_FACEBOOK_CALLBACK_URL
-          value: http://localhost:4000/auth/facebook/redirect
+          value: "https://cms-proxyapi-{{ .Release.Namespace }}.cluster.smartpoke.es/auth/facebook/redirect"
         - name: REACT_APP_MONGODB_URI
-          value: mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.dev-env.svc.cluster.local/smartpoke
+          value: "mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local,data-store-mongodb-1.data-store-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local,data-store-mongodb-2.data-store-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local/smartpoke"
         - name: REACT_APP_CLIENT_HOME_PAGE_URL
-          value: http://localhost:3000
+          value: "https://cms-webui-{{ .Release.Namespace }}.cluster.smartpoke.es"
         ports:
         - containerPort: 4000
       - name: cms-restapi
-        image: chalonazo/cms-restapi:1.0
+        image: chalonazo/cms-restapi:1.9
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         env:
         - name: API_VERSION
@@ -73,7 +73,11 @@ spec:
         - name: PUBLISH_API
           value: "https://platform-{{ .Release.Namespace }}.cluster.smartpoke.es/directory.php"
         - name: MONGODB_URI
-          value: mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.dev-env.svc.cluster.local/smartpoke
+          value: "mongodb://spring:spring@data-store-mongodb-0.data-store-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local,data-store-mongodb-1.data-store-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local,data-store-mongodb-2.data-store-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local/smartpoke"
+        - name: WEB_CMS_CORS
+          value: "https://cms-webui-{{ .Release.Namespace }}.cluster.smartpoke.es"
+        - name: API_CMS_CORS
+          value: "https://cms-restapi-{{ .Release.Namespace }}.cluster.smartpoke.es"
         {{- if .Values.mariadb.enabled }}
         - name: MARIADB_HOST
           value: {{ template "joomla.mariadb.fullname" . }}
@@ -106,13 +110,13 @@ spec:
         ports:
         - containerPort: 5000
       - name: cms-webui
-        image: chalonazo/cms-webui:1.0
+        image: chalonazo/cms-webui:1.26
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         env:
         - name: REACT_APP_API_URL
-          value: http://localhost:5000/api
+          value: "https://cms-restapi-{{ .Release.Namespace }}.cluster.smartpoke.es/api"
         - name: REACT_APP_PROXY_URL
-          value: http://localhost:4000
+          value: "https://cms-proxyapi-{{ .Release.Namespace }}.cluster.smartpoke.es"
         - name: REACT_APP_API_ID_FB
           value: "4061681973945682"
         - name: REACT_APP_VERSION_FB

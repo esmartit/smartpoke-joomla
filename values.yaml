@@ -69,7 +69,7 @@ externalDatabase:
   user: bn_joomla
 
   ## Database password
-  password: ""
+  password: "Asdfg12345"
 
   ## Database name
   database: bitnami_joomla
@@ -110,7 +110,7 @@ mariadb:
     user: bn_joomla
     ## If the password is not specified, mariadb will generates a random password
     ##
-    # password:
+    password: "Asdfg12345"
 
   ## MariaDB admin password
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
