@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "joomla.fullname" . }}
@@ -24,30 +24,42 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: "{{ template "joomla.fullname" . }}"
-          servicePort: http
+          service:
+            name: "{{ template "joomla.fullname" . }}"
+            port:
+              name: http
   - host: "cms-webui-{{ .Release.Namespace }}.cluster.smartpoke.es"
     http:
       paths:
         - path: /
+          pathType: ImplementationSpecific
           backend:
-            serviceName: "{{ template "joomla.fullname" . }}-cms-webui"
-            servicePort: http
+            service:
+              name: "{{ template "joomla.fullname" . }}-cms-webui"
+              port:
+                name: http
   - host: "cms-proxyapi-{{ .Release.Namespace }}.cluster.smartpoke.es"
     http:
       paths:
         - path: /
+          pathType: ImplementationSpecific
           backend:
-            serviceName: "{{ template "joomla.fullname" . }}-cms-proxyapi"
-            servicePort: http
+            service:
+              name: "{{ template "joomla.fullname" . }}-cms-proxyapi"
+              port:
+                name: http
   - host: "cms-restapi-{{ .Release.Namespace }}.cluster.smartpoke.es"
     http:
       paths:
         - path: /
+          pathType: ImplementationSpecific
           backend:
-            serviceName: "{{ template "joomla.fullname" . }}-cms-restapi"
-            servicePort: http
+            service:
+              name: "{{ template "joomla.fullname" . }}-cms-restapi"
+              port:
+                name: http
   tls:
     - hosts:
         - "platform-{{ .Release.Namespace }}.cluster.smartpoke.es"
